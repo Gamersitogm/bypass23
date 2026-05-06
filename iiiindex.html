@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bypass Tool Pro</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: system-ui, Arial;
+    background: linear-gradient(135deg, #0b0f1a, #111827);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.app {
+    width: 92%;
+    max-width: 420px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 18px;
+    padding: 20px;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+.credits {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 18px;
+    margin: 10px 0 15px;
+    color: #7dd3fc;
+}
+
+.avatar-label {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #3b82f6;
+    margin: 0 auto 15px;
+}
+
+.avatar-label img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.file-label {
+    display: block;
+    padding: 14px;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #1e3a8a, #2563eb);
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #06b6d4, #3b82f6);
+    color: white;
+    font-weight: bold;
+    margin-top: 8px;
+    cursor: pointer;
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+.status-box {
+    margin-top: 10px;
+    font-size: 13px;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.ok { color: #4ade80; }
+.empty { color: #f87171; }
+
+/* TOAST */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.85);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-size: 13px;
+    opacity: 0;
+    transition: 0.3s;
+    border: 1px solid rgba(255,255,255,0.15);
+    pointer-events: none;
+}
+
+.toast.show {
+    opacity: 1;
+}
+
+/* ALERTA */
+.alert-box {
+    margin-top: 10px;
+}
+
+.alert-box button {
+    width: auto;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(255, 193, 7, 0.15);
+    border: 1px solid rgba(255, 193, 7, 0.4);
+    color: #facc15;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.alert-menu {
+    margin-top: 8px;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    font-size: 12px;
+    display: none;
+    color: #fbbf24;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <div class="credits">BYPASS TOOL • @capybarita_23</div>
+
+    <h1>BYPASS TOOL PRO</h1>
+
+    <!-- PNG -->
+    <div class="avatar-label">
+        <img src="assets/capybara.png" alt="avatar">
+    </div>
+
+    <label class="file-label">
+        📁 Seleccionar video MP4
+        <input type="file" id="file" accept="video/mp4">
+    </label>
+
+    <div class="status-box empty" id="videoStatus">❌ No hay video cargado</div>
+
+    <button id="remove">🗑️ Eliminar video</button>
+    <button id="run">⚡ Modificar Video</button>
+
+    <!-- CREATOR -->
+    <div style="margin-top:12px;">
+        <a href="https://www.tiktok.com/@capybarita_23" target="_blank" style="color:#38bdf8; text-decoration:none; font-weight:bold;">
+            Creador del bypass
+        </a>
+    </div>
+
+    <!-- ALERTA -->
+    <div class="alert-box">
+        <button id="alertToggle">⚠️ Información</button>
+
+        <div id="alertMenu" class="alert-menu">
+            ⚠️ 1080p 60fps es lo máximo<br>
+            Si te excedes puede haber baneos o bloqueos
+        </div>
+    </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+
+const fileInput = document.getElementById("file");
+const statusBox = document.getElementById("videoStatus");
+
+let currentFile = null;
+
+/* TOAST */
+function showToast(msg) {
+    const toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2500);
+}
+
+/* CARGAR */
+fileInput.onchange = () => {
+    currentFile = fileInput.files[0];
+
+    if (currentFile) {
+        statusBox.textContent = "✔ Video cargado: " + currentFile.name;
+        statusBox.className = "status-box ok";
+        showToast("Video cargado");
+    }
+};
+
+/* ELIMINAR */
+document.getElementById("remove").onclick = () => {
+    fileInput.value = "";
+    currentFile = null;
+
+    statusBox.textContent = "❌ No hay video cargado";
+    statusBox.className = "status-box empty";
+
+    showToast("Video eliminado");
+};
+
+/* MODIFICAR */
+document.getElementById("run").onclick = async () => {
+
+    if (!currentFile) {
+        showToast("Selecciona un video primero");
+        return;
+    }
+
+    statusBox.textContent = "⚡ Procesando archivo...";
+    statusBox.className = "status-box";
+
+    const buffer = await currentFile.arrayBuffer();
+    const bytes = new Uint8Array(buffer);
+
+    const target = [0x65,0x6c,0x73,0x74];
+    let index = -1;
+
+    for (let i = 0; i < bytes.length - 4; i++) {
+        if (
+            bytes[i] === target[0] &&
+            bytes[i+1] === target[1] &&
+            bytes[i+2] === target[2] &&
+            bytes[i+3] === target[3]
+        ) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index === -1) {
+        statusBox.textContent = "❌ archivo no editable, porfavor exportar con otro editor";
+        statusBox.className = "status-box empty";
+        showToast("Error: #3829");
+        return;
+    }
+
+    let offset = index;
+
+    for (let i = index; i < index + 50; i++) {
+        if (
+            bytes[i] === 0x00 &&
+            bytes[i+1] === 0x00 &&
+            bytes[i+2] === 0x00 &&
+            bytes[i+3] === 0x00
+        ) {
+            offset = i + 4;
+            break;
+        }
+    }
+
+    const patch = [0x10,0x00,0x00,0x00,0x00,0x01];
+
+    for (let i = 0; i < patch.length; i++) {
+        bytes[offset + i] = patch[i];
+    }
+
+    const blob = new Blob([bytes], { type: "video/mp4" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Video_modificado_pro.mp4";
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+    statusBox.textContent = "✔ Video modificado correctamente";
+    statusBox.className = "status-box ok";
+
+    showToast("Proceso completado");
+};
+
+/* ALERTA MENU */
+const alertBtn = document.getElementById("alertToggle");
+const alertMenu = document.getElementById("alertMenu");
+
+alertBtn.onclick = () => {
+    alertMenu.style.display =
+        alertMenu.style.display === "block" ? "none" : "block";
+};
+
+</script>
+
+</body>
+</html>
